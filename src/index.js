@@ -2,7 +2,7 @@ import { ruKeys, enKeys } from './modules/data-keys.js';
 import { Key } from './modules/Key.js';
 import './style.css'
 
-let languageKeyboard = 'ru' //sessionStorage.getItem('languageKeyboard') ? sessionStorage.getItem('languageKeyboard') : 'ru';
+let languageKeyboard =  localStorage.getItem('languageKeyboard') ? localStorage.getItem('languageKeyboard') : 'ru';
 let isShift = false;
 let isCapsLock = false;
 let pressed = new Set();
@@ -57,6 +57,7 @@ const changeLanguage = () => {
         dataKeys = ruKeys;
     }
     generateKeys();
+    localStorage.setItem('languageKeyboard', languageKeyboard)
     textarea.focus();
 }
 
@@ -82,7 +83,6 @@ const changeShift = (text) => {
 const inputText = (text) => {
     let caretPosition = getCaret(textarea);
     if (caretPosition === valueTextarea.length) {
-        console.log(getCaret(textarea));
         valueTextarea += text;
         textarea.textContent = valueTextarea;
         textarea.selectionStart = textarea.value.length;
@@ -94,7 +94,6 @@ const inputText = (text) => {
         valueTextarea = str1+text+str2;
         textarea.textContent = valueTextarea;
         textarea.setSelectionRange(caretPosition+1, caretPosition+1);
-        console.log(str1, str2);
     }
 }
 
@@ -112,28 +111,26 @@ const deleteLeftSymbol = () => {
         valueTextarea = str1.slice(0, -1)+str2;
         textarea.textContent = valueTextarea;
         textarea.setSelectionRange(caretPosition-1, caretPosition-1);
-        console.log(str1, str2);
     }
 
 }
 
+let down = false;
 document.addEventListener('keydown', (event) => {
     event.preventDefault();
     pressedKeyAnimation(event.code);
     pressed.add(event.code);
+    if(down) return;
+    down = true;
     if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
         event.preventDefault()
         changeShift();
         pressedKeyAnimation(event.code) 
     }
-    dataKeys.forEach(data => {
-        if (event.code === data.keyCode) {
-
-        }
-    })
 })
 
 document.addEventListener('keyup', (event) => {
+    down = false
     event.preventDefault();
     pressedKeyAnimationEnd(event.code);
     textarea.focus();
@@ -141,10 +138,15 @@ document.addEventListener('keyup', (event) => {
         changeLanguage();
     }
     pressed.clear();
+    if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+        event.preventDefault()
+        changeShift();
+        pressedKeyAnimation(event.code) 
+    }
     keys.forEach(key => {
-            if (key.dataset.code === event.code) {
-                key.click()
-            }
+        if (key.dataset.code === event.code) {
+            key.click()
+        }
     })
 })
 
@@ -152,9 +154,6 @@ keyboard.addEventListener('click', event => {
     textarea.focus()
     if (event.target.dataset.code === 'CapsLock') {
         changeCapsLock();
-    }
-    if (event.target.dataset.code === 'ShiftLeft' || event.target.dataset.code === 'ShiftRight') {
-        changeShift();
     }
     if (event.target.classList.contains('key') && !event.target.classList.contains('special-key')) {
         let text = event.target.textContent;
@@ -188,12 +187,18 @@ keyboard.addEventListener('mousedown', event => {
     if (target.classList.contains('key')) {
         target.classList.add('active')
     }
+    if (event.target.dataset.code === 'ShiftLeft' || event.target.dataset.code === 'ShiftRight') {
+        changeShift();
+    }
 })
 
 keyboard.addEventListener('mouseup', event => {
     let target = event.target;
     if (target.classList.contains('key')) {
         target.classList.remove('active')
+    }
+    if (event.target.dataset.code === 'ShiftLeft' || event.target.dataset.code === 'ShiftRight') {
+        changeShift();
     }
 })
 
