@@ -4,7 +4,10 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 .keyboard {
-  width: 900px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 860px;
   margin: 0 auto;
   padding: 15px;
   text-align: center;
@@ -29,7 +32,7 @@ textarea:focus {
 .key {
   min-width: 45px;
   height: 40px;
-  padding: 5px 15px;
+  padding: 5px 10px;
   margin: 5px;
   background-color: rgb(197, 189, 178);
   box-shadow: 0 0 4px 2px  rgb(165, 141, 141);
@@ -52,8 +55,12 @@ textarea:focus {
 }
 
 .key[data-code="Backspace"] {
-  width: 130px;
+  width: 90px;
 }
 .key[data-code="Space"] {
-  width: 340px;
+  width: 370px;
+}
+.key[data-code="ShiftRight"], 
+.key[data-code="ShiftLeft"] {
+  width: 75px;
 }
