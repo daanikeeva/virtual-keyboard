@@ -78,13 +78,47 @@ const changeShift = (text) => {
     generateKeys();
 
 }
-const inputText = (code) => {
-    valueTextarea += text;
-    textarea.textContent = valueTextarea;
-    textarea.selectionStart = textarea.value.length;
+
+const inputText = (text) => {
+    let caretPosition = getCaret(textarea);
+    if (caretPosition === valueTextarea.length) {
+        console.log(getCaret(textarea));
+        valueTextarea += text;
+        textarea.textContent = valueTextarea;
+        textarea.selectionStart = textarea.value.length;
+        textarea.focus()
+    }
+    else {
+        let str1 = valueTextarea.slice(0, caretPosition);
+        let str2 = valueTextarea.slice(caretPosition, valueTextarea.length);
+        valueTextarea = str1+text+str2;
+        textarea.textContent = valueTextarea;
+        textarea.setSelectionRange(caretPosition+1, caretPosition+1);
+        console.log(str1, str2);
+    }
+}
+
+const deleteLeftSymbol = () => {
+    let caretPosition = getCaret(textarea);
+    if (caretPosition === valueTextarea.length) {
+        valueTextarea = valueTextarea.slice(0, -1);
+        textarea.textContent = valueTextarea;
+        textarea.selectionStart = textarea.value.length;
+        textarea.focus()
+    }
+    else {
+        let str1 = valueTextarea.slice(0, caretPosition);
+        let str2 = valueTextarea.slice(caretPosition, valueTextarea.length);
+        valueTextarea = str1.slice(0, -1)+str2;
+        textarea.textContent = valueTextarea;
+        textarea.setSelectionRange(caretPosition-1, caretPosition-1);
+        console.log(str1, str2);
+    }
+
 }
 
 document.addEventListener('keydown', (event) => {
+    event.preventDefault();
     pressedKeyAnimation(event.code);
     pressed.add(event.code);
     if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
@@ -94,32 +128,58 @@ document.addEventListener('keydown', (event) => {
     }
     dataKeys.forEach(data => {
         if (event.code === data.keyCode) {
-            
+
         }
     })
 })
+
 document.addEventListener('keyup', (event) => {
+    event.preventDefault();
     pressedKeyAnimationEnd(event.code);
     textarea.focus();
     if (pressed.has('ControlLeft') && pressed.has('AltLeft')) {
         changeLanguage();
     }
     pressed.clear();
-
-    if (event.code === 'CapsLock') {
-        changeCapsLock();
-    }
-    if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
-        changeShift();
-    }
-
+    keys.forEach(key => {
+            if (key.dataset.code === event.code) {
+                key.click()
+            }
+    })
 })
 
 keyboard.addEventListener('click', event => {
     textarea.focus()
+    if (event.target.dataset.code === 'CapsLock') {
+        changeCapsLock();
+    }
+    if (event.target.dataset.code === 'ShiftLeft' || event.target.dataset.code === 'ShiftRight') {
+        changeShift();
+    }
     if (event.target.classList.contains('key') && !event.target.classList.contains('special-key')) {
         let text = event.target.textContent;
         inputText(text);
+    }
+    if (event.target.dataset.code === 'Tab') {
+        inputText('\t')
+    }
+    if (event.target.dataset.code === 'Enter') {
+        inputText('\n')
+    }
+    if (event.target.dataset.code === 'Backspace') {
+        deleteLeftSymbol()
+    }
+    if (event.target.dataset.code === 'ArrowUp') {
+        inputText('▲')
+    }
+    if (event.target.dataset.code === 'ArrowDown') {
+        inputText('▼')
+    }
+    if (event.target.dataset.code === 'ArrowLeft') {
+        inputText('◄')
+    }
+    if (event.target.dataset.code === 'ArrowRight') {
+        inputText('►')
     }
 })
 
@@ -136,3 +196,23 @@ keyboard.addEventListener('mouseup', event => {
         target.classList.remove('active')
     }
 })
+
+function getCaret(el) { 
+    if (el.selectionStart) { 
+      return el.selectionStart; 
+    } else if (document.selection) { 
+      el.focus(); 
+   
+      var r = document.selection.createRange(); 
+      if (r == null) { 
+        return 0; 
+      } 
+      var re = el.createTextRange(), 
+          rc = re.duplicate(); 
+      re.moveToBookmark(r.getBookmark()); 
+      rc.setEndPoint('EndToStart', re); 
+   
+      return rc.text.length; 
+    }  
+    return 0; 
+  }
