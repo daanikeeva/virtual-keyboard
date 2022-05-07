@@ -26,6 +26,9 @@ const config = {
         new HtmlWebpackPlugin({
             template: 'index.html',
         }),
+        // new ESLintPlugin({
+
+        // }),
         // new MiniCssExtractPlugin({
         //     filename: 'style.css',
         // })
