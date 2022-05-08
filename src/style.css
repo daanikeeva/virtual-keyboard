@@ -1,66 +1,103 @@
+:root {
+  --notebook-color: #04043a;
+  --neon-color: #00d4ff;
+  --second-neon-color: #4c0979;
+}
+
 * {
   box-sizing: border-box;
   margin: 0 auto;
   font-family: Arial, Helvetica, sans-serif;
+  color: rgb(255, 255, 255);
+}
+body {
+  background: linear-gradient(130deg, rgba(0,255,162,1) 0%, #4c0979 48%, rgba(0,212,255,1) 100%);
+}
+.hint {
+  width: 600px;
+  padding: 30px;
+  text-align: center;
 }
 .keyboard {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  width: 860px;
-  margin: 0 auto;
-  padding: 15px;
+  gap: 10px;
+  width: 960px;
+  margin-top: -45px;
+  padding: 20px;
   text-align: center;
-  border: 2px solid rgb(61, 57, 57);
-  box-shadow: inset 0px 0px 82px 9px  rgba(122, 106, 81, 0.59);
+  border: 10px solid var(--notebook-color);
+  border-radius: 10px;
+  background-color: var(--notebook-color);
+  box-shadow: inset 0px 0px 20px 1px  rgba(105, 113, 230, 0.288);
+  transform: perspective(450px) rotateX(20deg);
 }
 textarea {
   display: block;
-  width: 860px;
-  height: 250px;
+  width: 845px;
+  height: 450px;
   padding: 20px;
   overflow-y: auto;
-  margin: 50px auto;
+  margin-top: 50px;
   resize: none;
-  font-size: 24px;
+  font-size: 30px;
   letter-spacing: 0.05em;
-}
-textarea:focus {
-  box-shadow: 0 0 15px 2px  rgb(197, 189, 178);
-  outline:1px solid rgb(197, 189, 178);
+  background-color: rgb(255, 255, 255);
+  border: 20px solid var(--notebook-color);
+  border-bottom-width: 40px;
+  color: black;
+  outline: 1px solid var(--notebook-color);
+  border-radius: 10px;
 }
 .key {
-  min-width: 45px;
-  height: 40px;
+  min-width: 50px;
+  height: 50px;
   padding: 5px 10px;
-  margin: 5px;
-  background-color: rgb(197, 189, 178);
-  box-shadow: 0 0 4px 2px  rgb(165, 141, 141);
+  font-size: 22px;
+  background-color: var(--notebook-color);
+  box-shadow: 0 0 4px 1px #00d5ff77 inset;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   border-radius: 10px;
   transition: 0.3s;
-  /* display: inline-block; */
+  user-select: none;
 }
 .key:hover {
   cursor: pointer;
-  background-color: rgb(238, 238, 238);
+  box-shadow: 0 0 5px 0.5px var(--neon-color), inset 0 0 4px 1px var(--neon-color);
 }
 
 .key.active {
+  cursor: pointer;
   transform: scale(0.95);
-  box-shadow: 0 0 4px 0px  rgb(165, 141, 141);
-  background-color: rgb(238, 238, 238);
+  font-weight: 600;
+  box-shadow: 0 0 4px 1px var(--neon-color);
+  background-color:  var(--neon-color);
+  color: var(--notebook-color);
 }
 
 .key[data-code="Backspace"] {
-  width: 90px;
+  width: 120px;
+}
+.key[data-code="CapsLock"] {
+  width: 120px;
 }
 .key[data-code="Space"] {
-  width: 370px;
+  width: 400px;
 }
 .key[data-code="ShiftRight"], 
 .key[data-code="ShiftLeft"] {
-  width: 75px;
+  width: 115px;
+}
+.key[data-code="Tab"] {
+  width: 70px;
+}
+.key[data-code="Enter"] {
+  width: 95px;
+}
+.key[data-code="ControlRight"], 
+.key[data-code="ControlLeft"], .key[data-code="MetaLeft"] {
+  width: 56px;
 }

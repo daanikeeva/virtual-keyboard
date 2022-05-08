@@ -15,11 +15,11 @@ let dataKeys = languageKeyboard === 'ru' ? ruKeys : enKeys;
 
 const generateDomElements = () => {
   keyboard.className = 'keyboard';
-  const aboutOS = document.createElement('div');
-  aboutOS.textContent = 'Клавиатура создана в операционной системе Windows';
-  const aboutChangeLang = document.createElement('div');
-  aboutChangeLang.textContent = 'Комбинация для переключения языка : левыe ctrl + alt';
-  document.body.append(textarea, keyboard, aboutOS, aboutChangeLang);
+  const hint = document.createElement('div');
+  hint.className = 'hint';
+  hint.innerHTML = `<p>Клавиатура создана в операционной системе Windows</p>
+  <p>Комбинация для переключения языка: левыe ctrl + alt</p>`;
+  document.body.append(textarea, keyboard, hint);
   textarea.focus();
 };
 generateDomElements();
@@ -74,67 +74,42 @@ const changeShift = () => {
   generateKeys();
 };
 
-function getCaret(el) {
-  if (el.selectionStart) {
-    return el.selectionStart;
-  } if (document.selection) {
-    el.focus();
-
-    const r = document.selection.createRange();
-    if (r == null) {
-      return 0;
-    }
-    const re = el.createTextRange();
-    const rc = re.duplicate();
-    re.moveToBookmark(r.getBookmark());
-    rc.setEndPoint('EndToStart', re);
-
-    return rc.text.length;
-  }
-  return 0;
-}
-
 const inputText = (text) => {
-  const caretPosition = getCaret(textarea);
-  if (caretPosition === valueTextarea.length) {
-    valueTextarea += text;
-    textarea.textContent = valueTextarea;
-    textarea.selectionStart = textarea.value.length;
-    textarea.focus();
-  } else {
-    const str1 = valueTextarea.slice(0, caretPosition);
-    const str2 = valueTextarea.slice(caretPosition, valueTextarea.length);
-    valueTextarea = str1 + text + str2;
-    textarea.textContent = valueTextarea;
-    textarea.setSelectionRange(caretPosition + 1, caretPosition + 1);
-  }
+  textarea.focus();
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const str1 = valueTextarea.slice(0, start);
+  const str2 = valueTextarea.slice(end, valueTextarea.length);
+  valueTextarea = str1 + text + str2;
+  textarea.textContent = valueTextarea;
+  textarea.selectionStart = start + 1;
 };
 
 const deleteLeftSymbol = () => {
-  const caretPosition = getCaret(textarea);
-  if (caretPosition === valueTextarea.length) {
-    valueTextarea = valueTextarea.slice(0, -1);
-    textarea.textContent = valueTextarea;
-    textarea.selectionStart = textarea.value.length;
-    textarea.focus();
-  } else {
-    const str1 = valueTextarea.slice(0, caretPosition);
-    const str2 = valueTextarea.slice(caretPosition, valueTextarea.length);
+  textarea.focus();
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const str1 = valueTextarea.slice(0, start);
+  const str2 = valueTextarea.slice(end, valueTextarea.length);
+  if (start === end) {
     valueTextarea = str1.slice(0, -1) + str2;
     textarea.textContent = valueTextarea;
-    textarea.setSelectionRange(caretPosition - 1, caretPosition - 1);
+    textarea.setSelectionRange(str1.length - 1, str1.length - 1);
+  } else {
+    valueTextarea = str1 + str2;
+    textarea.textContent = valueTextarea;
+    textarea.setSelectionRange(str1.length, str1.length);
   }
 };
 
 let down = false;
 document.addEventListener('keydown', (event) => {
-  if (down) return;
-  down = true;
   pressedKeyAnimation(event.code);
   event.preventDefault();
   pressed.add(event.code);
   if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
-    // event.preventDefault();
+    if (down) return;
+    down = true;
     changeShift();
     pressedKeyAnimation(event.code);
   }
@@ -142,7 +117,6 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('keyup', (event) => {
   pressedKeyAnimationEnd(event.code);
-  event.preventDefault();
   down = false;
   textarea.focus();
   if (pressed.has('ControlLeft') && pressed.has('AltLeft')) {
@@ -150,7 +124,6 @@ document.addEventListener('keyup', (event) => {
   }
   pressed.clear();
   if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
-    // event.preventDefault();
     changeShift();
     pressedKeyAnimationEnd(event.code);
   } else {
@@ -199,8 +172,9 @@ keyboard.addEventListener('mousedown', (event) => {
   if (target.classList.contains('key')) {
     target.classList.add('active');
   }
-  if (event.target.dataset.code === 'ShiftLeft' || event.target.dataset.code === 'ShiftRight') {
+  if (target.dataset.code === 'ShiftLeft' || target.dataset.code === 'ShiftRight') {
     changeShift();
+    pressedKeyAnimation(target.dataset.code);
   }
 });
 
