@@ -1,0 +1,103 @@
+:root {
+  --notebook-color: #04043a;
+  --neon-color: #00d4ff;
+  --second-neon-color: #4c0979;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0 auto;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(255, 255, 255);
+}
+body {
+  background: linear-gradient(130deg, #00ffa2 0%, #4c0979 48%, #00d4ff 100%);
+}
+.hint {
+  padding: 30px;
+  text-align: center;
+}
+.keyboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  width: 700px;
+  margin-top: -45px;
+  padding: 15px;
+  text-align: center;
+  border: 10px solid var(--notebook-color);
+  border-top-width: 20px;
+  border-radius: 10px;
+  background-color: var(--notebook-color);
+  box-shadow: inset 0px 0px 20px 1px  rgba(105, 113, 230, 0.288);
+  transform: perspective(450px) rotateX(20deg);
+}
+textarea {
+  display: block;
+  width: 635px;
+  height: 320px;
+  padding: 20px;
+  overflow-y: auto;
+  margin-top: 30px;
+  resize: none;
+  font-size: 26px;
+  letter-spacing: 0.05em;
+  background-color: rgb(255, 255, 255);
+  border: 20px solid var(--notebook-color);
+  border-bottom-width: 40px;
+  color: black;
+  outline: 1px solid var(--notebook-color);
+  border-radius: 10px;
+}
+.key {
+  min-width: 38px;
+  height: 40px;
+  padding: 5px 10px;
+  font-size: 16px;
+  background-color: var(--notebook-color);
+  box-shadow: 0 0 4px 1px #00d5ff77 inset;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  transition: 0.3s;
+  user-select: none;
+}
+.key:hover {
+  cursor: pointer;
+  box-shadow: 0 0 5px 0.5px var(--neon-color), inset 0 0 4px 1px var(--neon-color);
+}
+
+.key.active {
+  cursor: pointer;
+  transform: scale(0.95);
+  font-weight: 600;
+  box-shadow: 0 0 4px 1px var(--neon-color);
+  background-color:  var(--neon-color);
+  color: var(--notebook-color);
+}
+
+.key[data-code="Backspace"] {
+  width: 100px;
+}
+.key[data-code="CapsLock"] {
+  width: 100px;
+}
+.key[data-code="Space"] {
+  width: 280px;
+}
+.key[data-code="ShiftRight"], 
+.key[data-code="ShiftLeft"] {
+  width: 90px;
+}
+.key[data-code="Tab"] {
+  width: 70px;
+}
+.key[data-code="Enter"] {
+  width: 80px;
+}
+.key[data-code="ControlRight"], 
+.key[data-code="ControlLeft"], .key[data-code="MetaLeft"] {
+  width: 48px;
+}
