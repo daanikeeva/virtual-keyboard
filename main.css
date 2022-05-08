@@ -11,7 +11,7 @@
   color: rgb(255, 255, 255);
 }
 body {
-  background: linear-gradient(130deg, rgba(0,255,162,1) 0%, #4c0979 48%, rgba(0,212,255,1) 100%);
+  background: linear-gradient(130deg, #00ffa2 0%, #4c0979 48%, #00d4ff 100%);
 }
 .hint {
   width: 600px;
@@ -28,6 +28,7 @@ body {
   padding: 20px;
   text-align: center;
   border: 10px solid var(--notebook-color);
+  border-top-width: 20px;
   border-radius: 10px;
   background-color: var(--notebook-color);
   box-shadow: inset 0px 0px 20px 1px  rgba(105, 113, 230, 0.288);
@@ -39,7 +40,7 @@ textarea {
   height: 450px;
   padding: 20px;
   overflow-y: auto;
-  margin-top: 50px;
+  margin-top: 30px;
   resize: none;
   font-size: 30px;
   letter-spacing: 0.05em;
