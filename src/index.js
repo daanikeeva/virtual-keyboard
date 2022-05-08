@@ -128,37 +128,38 @@ const deleteLeftSymbol = () => {
 
 let down = false;
 document.addEventListener('keydown', (event) => {
-  event.preventDefault();
-  pressedKeyAnimation(event.code);
-  pressed.add(event.code);
   if (down) return;
   down = true;
+  pressedKeyAnimation(event.code);
+  event.preventDefault();
+  pressed.add(event.code);
   if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
-    event.preventDefault();
+    // event.preventDefault();
     changeShift();
     pressedKeyAnimation(event.code);
   }
 });
 
 document.addEventListener('keyup', (event) => {
-  down = false;
-  event.preventDefault();
   pressedKeyAnimationEnd(event.code);
+  event.preventDefault();
+  down = false;
   textarea.focus();
   if (pressed.has('ControlLeft') && pressed.has('AltLeft')) {
     changeLanguage();
   }
   pressed.clear();
   if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
-    event.preventDefault();
+    // event.preventDefault();
     changeShift();
-    pressedKeyAnimation(event.code);
+    pressedKeyAnimationEnd(event.code);
+  } else {
+    keys.forEach((key) => {
+      if (key.dataset.code === event.code) {
+        key.click();
+      }
+    });
   }
-  keys.forEach((key) => {
-    if (key.dataset.code === event.code) {
-      key.click();
-    }
-  });
 });
 
 keyboard.addEventListener('click', (event) => {
